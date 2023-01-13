@@ -58,6 +58,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 import AddCustomerVue from "@/views/customers/AddCustomer.vue";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/customer/";
 export default {
@@ -65,6 +66,11 @@ export default {
     name: 'CustmeR',
     components: {
         AddCustomerVue,
+    },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
     },
     data() {
         return {
@@ -81,7 +87,11 @@ export default {
     },
     async created() {
         try {
-            const res = await axios.get(`${baseURL}`);
+            const res = await axios.get(`${baseURL}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.customers = res.data;
         } catch (e) {
             alert(e);

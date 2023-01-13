@@ -39,11 +39,17 @@
 </template>
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/customer/";
 export default {
     name: 'AddCustomer',
     props: {
         close: Function,
+    },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
     },
     data() {
         return {
@@ -68,6 +74,10 @@ export default {
                     email: this.email,
                     address: this.address,
                     photo: this.photo,
+                }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
                 });
 
                 this.customers = [...this.customers, res.data];

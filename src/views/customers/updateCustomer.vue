@@ -2,7 +2,8 @@
     <form @submit.prevent="onSubmit(frmupdate)">
         <h4 class="modal-header">
             Customer Number: {{ number }}
-            <button type="button" tabindex="-1" class="btn btn-danger" @click="$router.push('/customer/')">close</button>
+            <button type="button" tabindex="-1" class="btn btn-danger"
+                @click="$router.push('/customer/')">close</button>
         </h4>
         <div class="modal-body">
             <label>
@@ -70,10 +71,16 @@
 <script>
 import axios from "axios";
 import { useRoute } from 'vue-router';
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/customer/";
 export default {
     name: 'UpdateCustomer',
     props: {
+    },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
     },
     data() {
         return {
@@ -90,7 +97,11 @@ export default {
     },
     async created() {
         try {
-            const res = await axios.get(`${baseURL}${this.number}`);
+            const res = await axios.get(`${baseURL}${this.number}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.customer = res.data;
             this.first_name = this.customer.first_name;
             this.middle_name = this.customer.middle_name;
@@ -114,6 +125,10 @@ export default {
                     email: this.email,
                     address: this.address,
                     photo: this.photo,
+                }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
                 });
             } catch (e) {
                 alert(e);

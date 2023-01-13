@@ -58,6 +58,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/withdraw/";
 export default {
 
@@ -70,9 +71,18 @@ export default {
             withdrawalAmount: 0,
         }
     },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
+    },
     async created() {
         try {
-            const res = await axios.get(baseURL);
+            const res = await axios.get(baseURL, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.withdrawals = res.data;
         } catch (e) {
             alert(e);
@@ -81,7 +91,11 @@ export default {
     methods: {
         async addwithdrawal() {
             try {
-                const res = await axios.post(baseURL, { account: this.withdrawalAccount, amount: this.withdrawalAmount });
+                const res = await axios.post(baseURL, { account: this.withdrawalAccount, amount: this.withdrawalAmount }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
+                });
 
                 this.withdrawals = [...this.withdrawals, res.data];
 

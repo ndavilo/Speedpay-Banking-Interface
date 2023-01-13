@@ -10,30 +10,30 @@
         <transition name="slide" appear>
             <div class="edit" v-if="showModal">
                 <form @submit.prevent="onSubmit(showModal = false)">
-                <div class="modal-body">
-                    <label>
-                        Account
-                        <input class="form-control" v-model="depositAccount" required type="account" />
-                    </label>
-                    <br />
-                    <label>
-                        Amount
-                        <input class="form-control" v-model="depositAmount" type="amount" required />
-                    </label>
-                    <br />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" @click="addDeposit()">
-                        Deposit
-                    </button>
-                </div>
-            </form>
+                    <div class="modal-body">
+                        <label>
+                            Account
+                            <input class="form-control" v-model="depositAccount" required type="account" />
+                        </label>
+                        <br />
+                        <label>
+                            Amount
+                            <input class="form-control" v-model="depositAmount" type="amount" required />
+                        </label>
+                        <br />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" @click="addDeposit()">
+                            Deposit
+                        </button>
+                    </div>
+                </form>
                 <button class="button btn btn-danger" @click="showModal = false">
                     Close Modal
                 </button>
             </div>
         </transition>
-        
+
     </div>
     <div>
         <table class="table">
@@ -59,6 +59,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/deposit/";
 export default {
 
@@ -71,9 +72,18 @@ export default {
             depositAmount: 0,
         }
     },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
+    },
     async created() {
         try {
-            const res = await axios.get(baseURL);
+            const res = await axios.get(baseURL, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.deposits = res.data;
         } catch (e) {
             alert(e);
@@ -82,7 +92,11 @@ export default {
     methods: {
         async addDeposit() {
             try {
-                const res = await axios.post(baseURL, { account: this.depositAccount, amount: this.depositAmount });
+                const res = await axios.post(baseURL, { account: this.depositAccount, amount: this.depositAmount }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
+                });
 
                 this.deposits = [...this.deposits, res.data];
 

@@ -58,10 +58,9 @@ const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
 
     name: 'AccounT',
-    computed:{
-        ...mapState('auth',{
+    computed: {
+        ...mapState('auth', {
             token: (state) => state.token,
-            status: (state) => state.status,
         }),
     },
     components: {
@@ -81,7 +80,11 @@ export default {
     },
     async created() {
         try {
-            const res = await axios.get(`${baseURL}`);
+            const res = await axios.get(`${baseURL}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.accounts = res.data;
         } catch (e) {
             alert(e);

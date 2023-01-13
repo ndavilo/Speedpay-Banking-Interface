@@ -1,48 +1,54 @@
 <template>
-        <form @submit.prevent="onSubmit(showModal = false)">
-            <div class="modal-body">
-                <label>
-                    Account Type
-                    <input class="form-control" v-model="account_type" type="account_type" />
-                </label>
-                <label>
-                    Amount
-                    <input class="form-control" v-model="amount" type="amount" required />
-                </label>
-                <br />
-                <label>
-                    Transaction Key
-                    <input class="form-control" v-model="transaction_key" required type="transaction_key" />
-                </label>
-                <label>
-                    Flag
-                    <input class="form-control" v-model="flag" type="flag" required />
-                </label>
-                <br />
-                <label>
-                    Closed
-                    <input class="form-control" v-model="closed" type="closed" required />
-                </label>
-                <label>
-                    Customer
-                    <input class="form-control" v-model="customer" type="customer" required />
-                </label>
-                <br />
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" @click="addaccount(); close()">
-                    Create
-                </button>
-            </div>
-        </form>
+    <form @submit.prevent="onSubmit(showModal = false)">
+        <div class="modal-body">
+            <label>
+                Account Type
+                <input class="form-control" v-model="account_type" type="account_type" />
+            </label>
+            <label>
+                Amount
+                <input class="form-control" v-model="amount" type="amount" required />
+            </label>
+            <br />
+            <label>
+                Transaction Key
+                <input class="form-control" v-model="transaction_key" required type="transaction_key" />
+            </label>
+            <label>
+                Flag
+                <input class="form-control" v-model="flag" type="flag" required />
+            </label>
+            <br />
+            <label>
+                Closed
+                <input class="form-control" v-model="closed" type="closed" required />
+            </label>
+            <label>
+                Customer
+                <input class="form-control" v-model="customer" type="customer" required />
+            </label>
+            <br />
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" @click="addaccount(); close()">
+                Create
+            </button>
+        </div>
+    </form>
 </template>
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
     name: 'AddAccount',
     props: {
         close: Function,
+    },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
     },
     data() {
         return {
@@ -65,6 +71,10 @@ export default {
                     flag: this.flag,
                     closed: this.closed,
                     customer: this.customer,
+                }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
                 });
                 this.accounts = [...this.accounts, res.data];
 

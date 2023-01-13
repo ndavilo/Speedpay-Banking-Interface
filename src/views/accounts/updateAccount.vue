@@ -12,12 +12,12 @@
             <br />
             <label>
                 Transaction Key
-                <input class="form-control" v-model="transaction_key"  type="transaction_key" />
+                <input class="form-control" v-model="transaction_key" type="transaction_key" />
             </label>
             <br />
             <label>
                 Flag
-                <input class="form-control" v-model="flag" type="flag"/>
+                <input class="form-control" v-model="flag" type="flag" />
             </label>
             <label>
                 Closed
@@ -25,7 +25,7 @@
             </label>
             <label>
                 Customer
-                <input class="form-control" v-model="customer" type="customer"/>
+                <input class="form-control" v-model="customer" type="customer" />
             </label>
             <br />
         </div>
@@ -65,10 +65,16 @@
 <script>
 import axios from "axios";
 import { useRoute } from 'vue-router';
+import { mapState } from "vuex";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
     name: 'UpdateAccount',
     props: {
+    },
+    computed: {
+        ...mapState('auth', {
+            token: (state) => state.token,
+        }),
     },
     data() {
         return {
@@ -77,20 +83,24 @@ export default {
             amount: 0,
             transaction_key: 0,
             flag: false,
-            closed:false,
+            closed: false,
             customer: 0,
             number: useRoute().params.number,
         }
     },
     async created() {
         try {
-            const res = await axios.get(`${baseURL}${this.number}`);
+            const res = await axios.get(`${baseURL}${this.number}`, {
+                headers: {
+                    'Authorization': `token ${this.token}`
+                }
+            });
             this.account = res.data;
             this.account_type = this.account.account_type;
             this.amount = this.account.amount;
             this.transaction_key = this.account.tansaction_key;
             this.flag = this.account.flag;
-            this.closed=this.account.closed;
+            this.closed = this.account.closed;
             this.customer = this.account.customer;
         } catch (e) {
             alert(e);
@@ -103,8 +113,12 @@ export default {
                     account_type: this.account_type,
                     tansaction_key: this.transaction_key,
                     flag: this.flag,
-                    closed:this.closed,
+                    closed: this.closed,
                     customer: this.customer,
+                }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
                 });
             } catch (e) {
                 alert(e);
