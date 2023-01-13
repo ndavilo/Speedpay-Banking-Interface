@@ -1,7 +1,13 @@
-import { LOADING_SPINNER_SHOW_MUTATION, SET_USER_TOKEN_MUTATION, SIGNIN_ACTION } from "@/store/storeconstants";
+import { LOADING_SPINNER_SHOW_MUTATION, SET_USER_TOKEN_MUTATION, SIGNIN_ACTION, SIGNOUT_ACTION } from "@/store/storeconstants";
 import axios from "axios";
 
 export default {
+    [SIGNOUT_ACTION](context){
+        context.commit(SET_USER_TOKEN_MUTATION,{
+            token: null,
+            status: null,
+        });
+    },
     async[SIGNIN_ACTION](context, payload){
         let postData = {
             username: payload.username,

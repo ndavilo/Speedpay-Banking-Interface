@@ -46,7 +46,8 @@
 </template>
   
 <script>
-import { mapState } from "vuex";
+import { SIGNOUT_ACTION } from "@/store/storeconstants";
+import { mapState, mapActions } from "vuex";
 export default {
     name: 'SideBar',
     computed:{
@@ -67,6 +68,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions('auth',{
+            signout: SIGNOUT_ACTION,
+        }),
         CustomerClick() {
             this.active1 = true;
             this.active2 = false;
@@ -146,7 +150,7 @@ export default {
             this.active6 = false;
             this.active7 = false;
             this.active8 = true;
-            window.location.reload();
+            this.signout();
         },
     },
 }
