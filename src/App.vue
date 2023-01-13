@@ -1,22 +1,23 @@
 <template>
   <SideBar />
-  <div class="container">
-    <Header
-      @toggle-add-task="toggleAddTask"
-      title="Speedpay"
-      :showAddTask="showAddTask"
-    />
+  <Header @toggle-add-task="toggleAddTask" title="Speedpay" :showAddTask="showAddTask" />
+  <div class="container" v-if="status===200">
     <router-view :showAddTask="showAddTask"></router-view>
+  </div>
+  <div class="container" v-if="status!==200">
+    <LogInVue/>
+  </div>
     <footer>
       <Footer />
     </footer>
-  </div>
 </template>
 
 <script>
 import Header from './components/Header'
 import SideBar from './components/SideBar.vue'
 import Footer from './components/Footer'
+import LogInVue from './views/LogIn.vue';
+import { mapState } from "vuex";
 
 export default {
   name: 'App',
@@ -24,6 +25,12 @@ export default {
     Header,
     SideBar,
     Footer,
+    LogInVue,
+  },
+  computed: {
+    ...mapState('auth', {
+      status: (state) => state.status,
+    }),
   },
   data() {
     return {
@@ -59,31 +66,33 @@ body {
   padding: 30px;
   border-radius: 5px;
 }
-footer{
+
+footer {
   position: relative;
   margin-top: 10%;
 }
+
 button {
-    appearance: none;
-    outline: none;
-    border: none;
-    cursor: pointer;
+  appearance: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
 
-    display: inline-block;
-    padding: 15px 25px;
-    background: inherit;
+  display: inline-block;
+  padding: 15px 25px;
+  background: inherit;
 
-    box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
-    transition: 0.4s ease-out;
+  box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
+  transition: 0.4s ease-out;
 }
 
 button:hover {
-    box-shadow: 6px 6px rgba(0, 0, 0, 0.6);
+  box-shadow: 6px 6px rgba(0, 0, 0, 0.6);
 }
+
 @media (max-width:1000px) {
   .container {
     left: 13%;
   }
 }
-
 </style>

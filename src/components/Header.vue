@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar">
         <div class="navbar-end">
-            <img src="https://speedpay.ng/img/speedpay.png" class= "navbar-logo" alt="david" @click="$router.push('/')" />
+            <img src="https://speedpay.ng/img/speedpay.png" class= "navbar-logo" alt="david"/>
         </div> 
     </nav> 
   </header>

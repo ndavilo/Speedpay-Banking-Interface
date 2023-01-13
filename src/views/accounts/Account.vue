@@ -1,15 +1,15 @@
 <template>
-    <h1>Customer</h1>
+    <h1>Account</h1>
 
     <button class="button" @click="showModal = true">
-        Customer Form
+        Account Form
     </button>
     <transition name="fade" appear>
         <div class="modal-overlay" v-if="showModal" @click="showModal = false"></div>
     </transition>
     <transition name="slide" appear>
         <div class="edit" v-if="showModal">
-            <AddCustomerVue :close="closecustomer" />
+            <AddAccountVue :close="closeaccount" />
             <button class="button btn btn-danger" @click="showModal = false">
                 Close Modal
             </button>
@@ -21,27 +21,21 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Middle Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Photo</th>
+                    <th scope="col">Account No.</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Balance</th>
+                    <th scope="col">Flagged</th>
+                    <th scope="col">Customer</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="customer in customers" v-bind:key="customer.id">
-                    <th scope="row">{{ customer.id }}</th>
-                    <td>{{ customer.first_name }}</td>
-                    <td>{{ customer.middle_name }}</td>
-                    <td>{{ customer.last_name }}</td>
-                    <td>{{ customer.phone_number }}</td>
-                    <td>{{ customer.email }}</td>
-                    <td>{{ customer.address }}</td>
-                    <td>{{ customer.photo }}</td>
-                    <td @click="$router.push(`/customer/${customer.id}`)">Edit
+                <tr v-for="account in accounts" v-bind:key="account.id">
+                    <th scope="row">{{ account.id }}</th>
+                    <td>{{ account.account_type }}</td>
+                    <td>{{ account.amount }}</td>
+                    <td>{{ account.flag }}</td>
+                    <td>{{ account.customer }}</td>
+                    <td @click="$router.push(`/account/${account.id}`)">Edit
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path
@@ -57,38 +51,44 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import axios from "axios";
-import AddCustomerVue from "@/containers/AddCustomer.vue";
-const baseURL = "http://nonsodavilo.pythonanywhere.com/customer/";
+import AddAccountVue from "@/views/accounts/AddAccount.vue";
+const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
 
-    name: 'CustmeR',
+    name: 'AccounT',
+    computed:{
+        ...mapState('auth',{
+            token: (state) => state.token,
+            status: (state) => state.status,
+        }),
+    },
     components: {
-        AddCustomerVue,
+        AddAccountVue,
     },
     data() {
         return {
-            customers: [],
-            first_name: "",
-            middle_name: "",
-            last_name: "",
-            phone_number: "",
-            email: "",
-            address: "",
-            photo: null,
+            accounts: [],
+            account_type: "",
+            amount: 0,
+            transaction_key: 0,
+            flag: false,
+            closed: false,
+            customer: 0,
             showModal: false,
         }
     },
     async created() {
         try {
             const res = await axios.get(`${baseURL}`);
-            this.customers = res.data;
+            this.accounts = res.data;
         } catch (e) {
             alert(e);
         }
     },
     methods: {
-        closecustomer() {
+        closeaccount() {
             this.showModal = false;
         },
     },
@@ -98,6 +98,6 @@ export default {
 </script>
 
 <style scoped>
-@import '../../public/css/popup.css';
+@import '../../../public/css/popup.css';
 </style>
 
