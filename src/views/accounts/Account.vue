@@ -9,13 +9,47 @@
     </transition>
     <transition name="slide" appear>
         <div class="edit" v-if="showModal">
-            <AddAccountVue :close="closeaccount" />
+            <form @submit.prevent="onSubmit(showModal = false)">
+                <div class="modal-body">
+                    <label>
+                        Account Type
+                        <input class="form-control" v-model="account_type" type="account_type" />
+                    </label>
+                    <label>
+                        Amount
+                        <input class="form-control" v-model="amount" type="amount" required />
+                    </label>
+                    <br />
+                    <label>
+                        Transaction Key
+                        <input class="form-control" v-model="transaction_key" required type="transaction_key" />
+                    </label>
+                    <label>
+                        Flag
+                        <input class="form-control" v-model="flag" type="flag" required />
+                    </label>
+                    <br />
+                    <label>
+                        Closed
+                        <input class="form-control" v-model="closed" type="closed" required />
+                    </label>
+                    <label>
+                        Customer
+                        <input class="form-control" v-model="customer" type="customer" required />
+                    </label>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @click="addaccount(); closeaccount()">
+                        Create
+                    </button>
+                </div>
+            </form>
             <button class="button btn btn-danger" @click="showModal = false">
                 Close Modal
             </button>
         </div>
     </transition>
-
 
     <div>
         <table class="table">
@@ -51,9 +85,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import axios from "axios";
-import AddAccountVue from "@/views/accounts/AddAccount.vue";
+import { mapMutations, mapState } from "vuex";
+import { LOADING_SPINNER_SHOW_MUTATION } from "@/store/storeconstants";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
 
@@ -63,13 +97,10 @@ export default {
             token: (state) => state.token,
         }),
     },
-    components: {
-        AddAccountVue,
-    },
     data() {
         return {
             accounts: [],
-            account_type: "",
+            account_type: "Savings",
             amount: 0,
             transaction_key: 0,
             flag: false,
@@ -79,6 +110,7 @@ export default {
         }
     },
     async created() {
+        this.showLoading(true);
         try {
             const res = await axios.get(`${baseURL}`, {
                 headers: {
@@ -86,6 +118,7 @@ export default {
                 }
             });
             this.accounts = res.data;
+            this.showLoading(false);
         } catch (e) {
             alert(e);
         }
@@ -93,6 +126,37 @@ export default {
     methods: {
         closeaccount() {
             this.showModal = false;
+        },
+        ...mapMutations({
+            showLoading: LOADING_SPINNER_SHOW_MUTATION,
+        }),
+        async addaccount() {
+            this.showLoading(true);
+            try {
+                const res = await axios.post(baseURL, {
+                    account_type: this.account_type,
+                    amount: this.amount,
+                    tansaction_key: this.transaction_key,
+                    flag: this.flag,
+                    closed: this.closed,
+                    customer: this.customer,
+                }, {
+                    headers: {
+                        'Authorization': `token ${this.token}`
+                    }
+                });
+                this.accounts = [...this.accounts, res.data];
+
+                this.account_type = "";
+                this.amount = 0;
+                this.transaction_key = 0;
+                this.flag = false;
+                this.closed = false;
+                this.customer = 0;
+                this.showLoading(false);
+            } catch (e) {
+                alert(e);
+            }
         },
     },
 

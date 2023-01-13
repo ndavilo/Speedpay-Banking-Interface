@@ -59,7 +59,8 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import { LOADING_SPINNER_SHOW_MUTATION } from "@/store/storeconstants";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/deposit/";
 export default {
 
@@ -78,6 +79,7 @@ export default {
         }),
     },
     async created() {
+        this.showLoading(true);
         try {
             const res = await axios.get(baseURL, {
                 headers: {
@@ -85,12 +87,17 @@ export default {
                 }
             });
             this.deposits = res.data;
+            this.showLoading(false);
         } catch (e) {
             alert(e);
         }
     },
     methods: {
+        ...mapMutations({
+            showLoading: LOADING_SPINNER_SHOW_MUTATION,
+        }),
         async addDeposit() {
+            this.showLoading(true);
             try {
                 const res = await axios.post(baseURL, { account: this.depositAccount, amount: this.depositAmount }, {
                     headers: {
@@ -102,6 +109,7 @@ export default {
 
                 this.depositAccount = "";
                 this.depositAmount = 0;
+                this.showLoading(false);
             } catch (e) {
                 alert(e);
             }

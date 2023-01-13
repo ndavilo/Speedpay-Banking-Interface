@@ -40,7 +40,8 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import { LOADING_SPINNER_SHOW_MUTATION } from "@/store/storeconstants";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/transfer/";
 export default {
 
@@ -60,6 +61,9 @@ export default {
         }),
     },
     methods: {
+        ...mapMutations({
+            showLoading: LOADING_SPINNER_SHOW_MUTATION,
+        }),
         frmtransfer() {
             this.Logintransition = true;
         },
@@ -67,6 +71,7 @@ export default {
             this.Logintransition = false;
         },
         async addtransfer() {
+            this.showLoading(true);
             try {
                 const res = await axios.post(baseURL, { debit: this.debitAccount, credit: this.creditAccount, amount: this.transferAmount }, {
                     headers: {
@@ -79,6 +84,7 @@ export default {
                 this.transferAmount = 0;
                 this.debitAccount = "";
                 this.creditAccount = "";
+                this.showLoading(false);
             } catch (e) {
                 alert(e);
             }

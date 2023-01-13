@@ -71,7 +71,8 @@
 <script>
 import axios from "axios";
 import { useRoute } from 'vue-router';
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import { LOADING_SPINNER_SHOW_MUTATION } from "@/store/storeconstants";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/customer/";
 export default {
     name: 'UpdateCustomer',
@@ -96,6 +97,7 @@ export default {
         }
     },
     async created() {
+        this.showLoading(true);
         try {
             const res = await axios.get(`${baseURL}${this.number}`, {
                 headers: {
@@ -110,12 +112,17 @@ export default {
             this.email = this.customer.email;
             this.address = this.customer.address;
             this.photo = this.customer.photo;
+            this.showLoading(false);
         } catch (e) {
             alert(e);
         }
     },
     methods: {
+        ...mapMutations({
+            showLoading: LOADING_SPINNER_SHOW_MUTATION,
+        }),
         async updateCustomer() {
+            this.showLoading(true);
             try {
                 await axios.patch(`${baseURL}${this.number}/`, {
                     first_name: this.first_name,
@@ -130,6 +137,7 @@ export default {
                         'Authorization': `token ${this.token}`
                     }
                 });
+                this.showLoading(false);
             } catch (e) {
                 alert(e);
             }

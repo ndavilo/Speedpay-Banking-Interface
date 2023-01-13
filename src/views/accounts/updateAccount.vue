@@ -30,7 +30,7 @@
             <br />
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" @click="updateAccount(); $router.push('/')">
+            <button class="btn btn-primary" @click="updateAccount(); $router.push('/account/')">
                 Update
             </button>
         </div>
@@ -65,7 +65,8 @@
 <script>
 import axios from "axios";
 import { useRoute } from 'vue-router';
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
+import { LOADING_SPINNER_SHOW_MUTATION } from "@/store/storeconstants";
 const baseURL = "http://nonsodavilo.pythonanywhere.com/account/";
 export default {
     name: 'UpdateAccount',
@@ -89,6 +90,7 @@ export default {
         }
     },
     async created() {
+        this.showLoading(true);
         try {
             const res = await axios.get(`${baseURL}${this.number}`, {
                 headers: {
@@ -102,12 +104,17 @@ export default {
             this.flag = this.account.flag;
             this.closed = this.account.closed;
             this.customer = this.account.customer;
+            this.showLoading(false);
         } catch (e) {
             alert(e);
         }
     },
     methods: {
+        ...mapMutations({
+            showLoading: LOADING_SPINNER_SHOW_MUTATION,
+        }),
         async updateAccount() {
+            this.showLoading(true);
             try {
                 await axios.patch(`${baseURL}${this.number}/`, {
                     account_type: this.account_type,
@@ -120,6 +127,7 @@ export default {
                         'Authorization': `token ${this.token}`
                     }
                 });
+                this.showLoading(false);
             } catch (e) {
                 alert(e);
             }
