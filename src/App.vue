@@ -1,11 +1,11 @@
 <template>
   <Header @toggle-add-task="toggleAddTask" title="Speedpay" :showAddTask="showAddTask" />
   <loader-vue v-if="showLoading"></loader-vue>
-  <div class="container" v-if="status===200">
+  <div class="container" v-if="isAuthenticated">
     <SideBar />
     <router-view :showAddTask="showAddTask"></router-view>
   </div>
-  <div class="container" v-if="status!==200">
+  <div class="container" v-if="!isAuthenticated">
     <LogInVue/>
   </div>
     <footer>
@@ -19,7 +19,8 @@ import SideBar from './components/SideBar.vue'
 import Footer from './components/Footer'
 import LogInVue from './views/LogIn.vue';
 import LoaderVue from './components/Loader.vue';
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
+import { IS_USER_AUTHENTICATE_GETTER } from './store/storeconstants';
 
 export default {
   name: 'App',
@@ -36,6 +37,9 @@ export default {
     }),
     ...mapState({
       showLoading: (state) => state.showLoading,
+    }),
+    ...mapGetters('auth',{
+      isAuthenticated:IS_USER_AUTHENTICATE_GETTER,
     }),
   },
   data() {
