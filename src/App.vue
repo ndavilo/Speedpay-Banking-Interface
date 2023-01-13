@@ -1,7 +1,8 @@
 <template>
-  <SideBar />
   <Header @toggle-add-task="toggleAddTask" title="Speedpay" :showAddTask="showAddTask" />
+  <loader-vue v-if="showLoading"></loader-vue>
   <div class="container" v-if="status===200">
+    <SideBar />
     <router-view :showAddTask="showAddTask"></router-view>
   </div>
   <div class="container" v-if="status!==200">
@@ -17,6 +18,7 @@ import Header from './components/Header'
 import SideBar from './components/SideBar.vue'
 import Footer from './components/Footer'
 import LogInVue from './views/LogIn.vue';
+import LoaderVue from './components/Loader.vue';
 import { mapState } from "vuex";
 
 export default {
@@ -26,10 +28,14 @@ export default {
     SideBar,
     Footer,
     LogInVue,
+    LoaderVue,
   },
   computed: {
     ...mapState('auth', {
       status: (state) => state.status,
+    }),
+    ...mapState({
+      showLoading: (state) => state.showLoading,
     }),
   },
   data() {

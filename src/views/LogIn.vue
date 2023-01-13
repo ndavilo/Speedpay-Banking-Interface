@@ -1,7 +1,7 @@
 <template>
     <router-link v-if="status === 200" to="/account/"></router-link>
     <transition name="slide" appear>
-        <div class="login-card edit" v-if="showModal">
+        <div class="login-card edit" :class="{ active: showLoading }" v-if="showModal">
             <h2>Login</h2>
             <form class="login-form" @submit.prevent="onSignin()">
                 <input type="text" v-model="username" placeholder="Username" />
@@ -16,7 +16,6 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import { SIGNIN_ACTION } from '../store/storeconstants';
-
 export default {
     name: 'LogIn',
     data() {
@@ -30,7 +29,9 @@ export default {
         ...mapState('auth', {
             status: (state) => state.status,
         }),
-
+        ...mapState({
+            showLoading: (state) => state.showLoading,
+        }),
 
     },
     methods: {
@@ -57,6 +58,9 @@ export default {
     border-radius: 24px;
     background: rgb(121, 149, 225);
     text-align: center;
+}
+.active{
+    opacity: 0.1;
 }
 
 .login-card>h2 {
