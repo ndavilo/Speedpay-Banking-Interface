@@ -55,16 +55,16 @@
         <table class="table">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Account No.</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Balance</th>
-                    <th scope="col">Flagged</th>
-                    <th scope="col">Customer</th>
+                    <th class="header__item" scope="col">Account No.</th>
+                    <th class="header__item" scope="col">Type</th>
+                    <th class="header__item" scope="col">Balance</th>
+                    <th class="header__item" scope="col">Flagged</th>
+                    <th class="header__item" scope="col">Customer</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="account in accounts" v-bind:key="account.id">
-                    <th scope="row">{{ account.id }}</th>
+                    <td scope="row">{{ account.id }}</td>
                     <td>{{ account.account_type }}</td>
                     <td>{{ account.amount }}</td>
                     <td>{{ account.flag }}</td>

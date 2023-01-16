@@ -1,6 +1,6 @@
-import mutations from "./mutations"
-import getters from "./getters"
-import actions from "./actions"
+import mutations from "./mutations";
+import getters from "./getters";
+import actions from "./actions";
 
 export default{
     namespaced: true,
@@ -8,7 +8,7 @@ export default{
         return {
             name:'Ilonze Chukwunonso David',
             token:'',
-            status:0,
+            user:'',
         }
     },
     mutations,

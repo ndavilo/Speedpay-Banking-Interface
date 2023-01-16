@@ -1,21 +1,31 @@
 <template>
-    <router-link v-if="status === 200" to="/account/"></router-link>
+    <router-link v-if="isAuthenticated" to="/account/"></router-link>
     <transition name="slide" appear>
         <div class="login-card edit" :class="{ active: showLoading }" v-if="showModal">
             <h2>Login</h2>
+            <div class="alert alert-danger" v-if="error">{{ error }}</div>
             <form class="login-form" @submit.prevent="onSignin()">
                 <input type="text" v-model="username" placeholder="Username" />
                 <input type="password" v-model="password" placeholder="Password" />
                 <a href="#">Forgot your password?</a>
-                <button @click="onSignin(); $router.push('/account/')">LOGIN</button>
+                <button @click="onSignin()">LOGIN</button>
             </form>
         </div>
     </transition>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { SIGNIN_ACTION } from '../store/storeconstants';
+import { 
+    mapGetters, 
+    mapState, 
+    mapActions, 
+    // mapMutations 
+} from 'vuex';
+import { 
+    SIGNIN_ACTION, 
+    IS_USER_AUTHENTICATE_GETTER, 
+    // LOADING_SPINNER_SHOW_MUTATION 
+} from '../store/storeconstants';
 export default {
     name: 'LogIn',
     data() {
@@ -23,15 +33,17 @@ export default {
             showModal: true,
             username: "",
             password: "",
+            error:"",
         }
     },
     computed: {
-        ...mapState('auth', {
-            status: (state) => state.status,
+        ...mapGetters('auth', {
+            isAuthenticated: IS_USER_AUTHENTICATE_GETTER,
         }),
         ...mapState({
             showLoading: (state) => state.showLoading,
         }),
+        
 
     },
     methods: {
@@ -39,11 +51,20 @@ export default {
             signin: SIGNIN_ACTION
         }),
         onSignin() {
+            // this.showLoading(true);
             this.signin({
                 username: this.username,
                 password: this.password,
+            }).catch(error =>{
+                this.error = error;
+                // this.showLoading(false);
             });
-        }
+            // this.showLoading(false);
+            this.$router.push('/customer/')
+        },
+        // ...mapMutations({
+        //     showLoading: LOADING_SPINNER_SHOW_MUTATION
+        // }),
     },
 }
 
@@ -59,7 +80,8 @@ export default {
     background: rgb(121, 149, 225);
     text-align: center;
 }
-.active{
+
+.active {
     opacity: 0.1;
 }
 

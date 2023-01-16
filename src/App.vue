@@ -1,16 +1,16 @@
 <template>
-  <Header @toggle-add-task="toggleAddTask" title="Speedpay" :showAddTask="showAddTask" />
+  <Header @toggle-add-task="toggleAddTask" :title=user :showAddTask="showAddTask" />
   <loader-vue v-if="showLoading"></loader-vue>
   <div class="container" v-if="isAuthenticated">
     <SideBar />
     <router-view :showAddTask="showAddTask"></router-view>
   </div>
   <div class="container" v-if="!isAuthenticated">
-    <LogInVue/>
+    <LogInVue />
   </div>
-    <footer>
-      <Footer />
-    </footer>
+  <footer>
+    <Footer />
+  </footer>
 </template>
 
 <script>
@@ -20,7 +20,7 @@ import Footer from './components/Footer'
 import LogInVue from './views/LogIn.vue';
 import LoaderVue from './components/Loader.vue';
 import { mapState, mapGetters } from "vuex";
-import { IS_USER_AUTHENTICATE_GETTER } from './store/storeconstants';
+import { IS_USER_AUTHENTICATE_GETTER, AUTO_LOGIN_ACTION } from './store/storeconstants';
 
 export default {
   name: 'App',
@@ -32,14 +32,14 @@ export default {
     LoaderVue,
   },
   computed: {
-    ...mapState('auth', {
-      status: (state) => state.status,
-    }),
     ...mapState({
       showLoading: (state) => state.showLoading,
     }),
-    ...mapGetters('auth',{
-      isAuthenticated:IS_USER_AUTHENTICATE_GETTER,
+    ...mapGetters('auth', {
+      isAuthenticated: IS_USER_AUTHENTICATE_GETTER,
+    }),
+    ...mapState('auth', {
+      user: (state) => state.user,
     }),
   },
   data() {
@@ -52,7 +52,10 @@ export default {
       this.showAddTask = !this.showAddTask
     },
   },
-}
+  created() {
+    this.$store.dispatch(`auth/${AUTO_LOGIN_ACTION}`);
+  },
+};
 </script>
 
 <style>

@@ -31,12 +31,12 @@
                     <i class="bi bi-send-fill"></i> <span>Transfer</span>
                 </span>
             </button>
-            <button @click="$router.push('/'); LoginClick()" v-if="status!==200">
+            <button @click="$router.push('/'); LoginClick()" v-if="!isAuthenticated">
                 <span :class="{ active: active7 }">
                     <i class="bi bi-box-arrow-in-right"></i> <span>Login</span>
                 </span>
             </button>
-            <button @click="$router.push('#'); LogoutClick()" v-if="status===200">
+            <button @click="$router.push('/'); LogoutClick()" v-if="isAuthenticated">
                 <span :class="{ active: active8 }">
                     <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
                 </span>
@@ -46,18 +46,18 @@
 </template>
   
 <script>
-import { SIGNOUT_ACTION } from "@/store/storeconstants";
-import { mapState, mapActions } from "vuex";
+import { SIGNOUT_ACTION, IS_USER_AUTHENTICATE_GETTER } from "@/store/storeconstants";
+import { mapGetters, mapActions } from "vuex";
 export default {
     name: 'SideBar',
-    computed:{
-        ...mapState('auth',{
-            status: (state) => state.status,
+    computed: {
+        ...mapGetters('auth', {
+            isAuthenticated: IS_USER_AUTHENTICATE_GETTER,
         }),
     },
     data() {
         return {
-            active1: false,
+            active1: true,
             active2: false,
             active3: false,
             active4: false,
@@ -68,7 +68,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('auth',{
+        ...mapActions('auth', {
             signout: SIGNOUT_ACTION,
         }),
         CustomerClick() {

@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar">
         <div class="navbar-end">
-            <img src="https://speedpay.ng/img/speedpay.png" class= "navbar-logo" alt="david"/>
+            <img src="https://speedpay.ng/img/speedpay.png" class= "navbar-logo" alt="david"/> <h3>{{ title }}</h3>
         </div> 
     </nav> 
   </header>
@@ -83,10 +83,14 @@ header {
     display: flex;
     gap: 6px;
     flex: 0 0 178px;
+    align-items: center;
 }
 .navbar
 .navbar-end:last-child > button > svg {
   color: #050505;
+}
+h3{
+  color: white;
 }
 
     
