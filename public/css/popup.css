@@ -1,5 +1,6 @@
 .button {
-    background: green;
+    background: #1c194c;
+    color: white;
     border-radius: 8px;
     margin: 10px;
 }

@@ -205,13 +205,21 @@ export default {
     background: #e8bebe;
 }
 
+.sidebar button>.active span,
+.sidebar button>.active i{
+    color: black;
+}
 .sidebar button:hover>span :is(i, img) {
     scale: 1.05;
 }
 
 .sidebar button>span>span {
     transition: 0.35;
-    color: rgb(94, 126, 214);
+    color: white;
+}
+
+.sidebar button:hover>span span {
+    color: black;
 }
 
 /* styles.css */
@@ -219,7 +227,7 @@ export default {
     position: relative;
     font-size: 28px;
     transition: 0.2s;
-    color: green;
+    color: white;
 }
 
 .sidebar button img {

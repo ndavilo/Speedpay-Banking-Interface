@@ -90,7 +90,7 @@ header {
   color: #050505;
 }
 h3{
-  color: white;
+  color: rgb(142, 142, 210);
 }
 
     

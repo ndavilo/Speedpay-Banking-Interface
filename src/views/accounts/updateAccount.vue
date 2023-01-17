@@ -2,7 +2,7 @@
     <form @submit.prevent="onSubmit(frmupdate)">
         <h4 class="modal-header">
             Account Number: {{ number }}
-            <button type="button" tabindex="-1" class="btn btn-danger" @click="$router.push('/')">close</button>
+            <button type="button" tabindex="-1" class="btn btn-danger" @click="$router.push('/account/')">close</button>
         </h4>
         <div class="modal-body">
             <label>
